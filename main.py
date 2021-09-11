@@ -1,30 +1,45 @@
 # coding=utf-8
-# This is a sample Python script.
-
-# Press Shift+F10 to execute it or replace it with your code.
-# Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
-import urllib as ul
 
 def print_hi(name):
-    # Use a breakpoint in the code line below to debug your script.
-    print("Hi, {0}".format(name))  # Press Ctrl+F8 to toggle the breakpoint.
+    print("Hi, {0}".format(name))
+
 
 def scrape_product_detail_page(product_detail_url):
     pass
 
-def real_python_exercise(url):
-    page = ul.urlopen(url)
-    html_bytes = page.read()
-    html = html_bytes.decode("utf-8")
-    title_index = html.find("<title>")
-    start_index = title_index + len("<title>")
-    end_index = html.find("</title>")
-    title = html[start_index:end_index]
-    
+
+def real_python_exercise_beautiful_soup(base_url):
+    from urllib import urlopen
+    from bs4 import BeautifulSoup
+
+    html_page = urlopen(base_url + "/profiles")
+    html_text = html_page.read().decode("utf-8")
+    soup = BeautifulSoup(html_text, "html.parser")
+
+    for link in soup.find_all("a"):
+        link_url = base_url + link["href"]
+        print(link_url)
+
+
+def real_python_exercise_mechanical_soup(url):
+    import mechanicalsoup as ms
+    browser = ms.Browser()
+    login_page = browser.get(url)
+    login_html = login_page.soup
+
+    form = login_html.select("form")[0]
+    form.select("input")[0]["value"] = "zeus"
+    form.select("input")[1]["value"] = "ThunderDude"
+
+    profiles_page = browser.submit(form, login_page.url)
+    links = profiles_page.soup.select("a")
+    for link in links:
+        address = link["href"]
+        text = link.text
+        print(f"{text}: {address}")
 
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
-    #print_hi('PyCharm')
-    real_python_exercise("http://olympus.realpython.org/profiles")
-
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
+    # print_hi('PyCharm')
+    #real_python_exercise_beautiful_soup("http://olympus.realpython.org")
+    real_python_exercise_mechanical_soup("http://olympus.realpython.org/login")
