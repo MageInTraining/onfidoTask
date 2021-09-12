@@ -40,12 +40,23 @@ def scrape_product_detail_page(product_detail_url):
     dfs = pd.read_html(product_detail_url)
     df = pd.concat(dfs)
     product_detail["model_year"] = (df[df[1] == "Ročník"][2].item())
-    product_detail["parameters"]["weight"] = (df[df[1] == "Hmotnost"][2].item())
+    try:
+        product_detail["parameters"]["weight"] = (df[df[1] == "Hmotnost"][2].item())
+    except:
+        product_detail["parameters"]["weight"] = None
     product_detail["parameters"]["frame"] = df[df[1] == "Rám"][2].item()
 
     return product_detail
 
 
 if __name__ == '__main__':
-    # scrape_product_detail_page("https://www.lapierre-bike.cz/produkt/spicy-cf-69/5943")
-    print(scrape_product_detail_page("https://www.lapierre-bike.cz/produkt/overvolt-glp-team-b500/5957"))
+    import json
+
+    results = [scrape_product_detail_page("https://www.lapierre-bike.cz/produkt/spicy-cf-69/5943"),
+               scrape_product_detail_page("https://www.lapierre-bike.cz/produkt/overvolt-glp-team-b500/5957"),
+               scrape_product_detail_page("https://www.lapierre-bike.cz/produkt/esensium-32-m250/5947"),
+               scrape_product_detail_page("https://www.lapierre-bike.cz/produkt/lapierre-shaper-30-disc/6021"),
+               scrape_product_detail_page("https://www.lapierre-bike.cz/produkt/lapierre-overvolt-ht-24/5958")]
+
+    with open('top-5-bikes.json', 'w') as outfile:
+        json.dump(results, outfile)
