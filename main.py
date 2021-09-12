@@ -31,7 +31,7 @@ def scrape_product_detail_page(product_detail_url):
         for child in children:
             product_detail["additional_photo_paths"].add(child["src"])
     except:
-        pass
+        product_detail["additional_photo_paths"].add[None]
 
     price = soup.find("div", class_="cena")
     children = price.find("span")
