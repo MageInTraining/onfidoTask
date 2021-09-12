@@ -29,9 +29,9 @@ def scrape_product_detail_page(product_detail_url):
         pohledy = soup.find("div", class_="pohledy")
         children = pohledy.findChildren("img")
         for child in children:
-            product_detail["additional_photo_paths"].add(child["src"])
+            product_detail["additional_photo_paths"].append(child["src"])
     except:
-        product_detail["additional_photo_paths"].add(None)
+        product_detail["additional_photo_paths"].append(None)
 
     price = soup.find("div", class_="cena")
     children = price.find("span")
