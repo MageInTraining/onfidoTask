@@ -4,6 +4,7 @@ def scrape_product_detail_page(product_detail_url):
     import urllib.request
     from bs4 import BeautifulSoup
     import pandas as pd
+
     product_detail = {
             "model": None
             , "url": None
@@ -41,6 +42,8 @@ def scrape_product_detail_page(product_detail_url):
     product_detail["model_year"] = (df[df[1] == "Ročník"][2].item())
     product_detail["parameters"]["weight"] = (df[df[1] == "Hmotnost"][2].item())
     product_detail["parameters"]["frame"] = df[df[1] == "Rám"][2].item()
+
+    return product_detail
 
 
 if __name__ == '__main__':
